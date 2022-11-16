@@ -1,5 +1,6 @@
 import { ipfs, JSONValue, log } from "@graphprotocol/graph-ts";
 import { Event, EventBadge } from "../generated/schema";
+import { EventBadgeMetadataTemplate } from "../generated/templates";
 import {
   createdEventSession,
   updatedEventSession,
@@ -7,7 +8,7 @@ import {
   TransferSingle,
 } from "../generated/templates/EventBadge/EventBadge";
 import {
-  getJSONFromIPFS,
+  getIPFSHashFromURL,
   getOrCreateArray,
   getOrCreateUser,
   getValueFromJSON,
@@ -31,32 +32,10 @@ export function handleCreateEventSession(event: createdEventSession): void {
     eventBadgeObj.quota = event.params.session.quota;
     eventBadgeObj.contentURL = event.params.session.contentUri;
     eventBadgeObj.event = eventObj.id;
+    let ipfsHash = getIPFSHashFromURL(event.params.session.contentUri);
+    eventBadgeObj.metadata = ipfsHash;
 
-    const ipfs_data = getJSONFromIPFS(event.params.session.contentUri);
-    if (ipfs_data) {
-      let image = ipfs_data.get("image");
-      if (image) {
-        eventBadgeObj.image = image.toString();
-      }
-
-      let attributes = ipfs_data.get("attributes");
-      if (attributes) {
-        let newAttributes: Array<string> = [];
-        let attributesArray = attributes.toArray();
-        let currentValue: JSONValue;
-        for (let i = 0; i < attributesArray.length; i++) {
-          currentValue = attributesArray[i].toObject().mustGet("value");
-          newAttributes.push(currentValue.toString());
-        }
-        eventBadgeObj.attributes = newAttributes;
-      }
-    } else {
-      log.error(
-        "[ERROR] Unable to get JSON data for tokenId {} with path: {}",
-        [event.params.sessionId.toString(), event.params.session.contentUri]
-      );
-    }
-
+    EventBadgeMetadataTemplate.create(ipfsHash);
     eventBadgeObj.save();
 
     log.info("[SELF-INFO]Created Event Badges | id: {}", [eventBadgeObj.id]);
@@ -75,26 +54,10 @@ export function handleUpdateEventSession(event: updatedEventSession): void {
     eventBadgeObj.role = event.params.session.role;
     eventBadgeObj.quota = event.params.session.quota;
     eventBadgeObj.contentURL = event.params.session.contentUri;
+    let ipfsHash = getIPFSHashFromURL(event.params.session.contentUri);
+    eventBadgeObj.metadata = ipfsHash;
 
-    const ipfs_data = getJSONFromIPFS(event.params.session.contentUri);
-    if (ipfs_data) {
-      let image = ipfs_data.get("image");
-      if (image) {
-        eventBadgeObj.image = image.toString();
-      }
-
-      let attributes = ipfs_data.get("attributes");
-      if (attributes) {
-        let newAttributes: Array<string> = [];
-        let attributesArray = attributes.toArray();
-        let currentValue: JSONValue;
-        for (let i = 0; i < attributesArray.length; i++) {
-          currentValue = attributesArray[i].toObject().mustGet("value");
-          newAttributes.push(currentValue.toString());
-        }
-        eventBadgeObj.attributes = newAttributes;
-      }
-    }
+    EventBadgeMetadataTemplate.create(ipfsHash);
 
     eventBadgeObj.save();
 

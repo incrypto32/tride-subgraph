@@ -1,4 +1,4 @@
-import { BigInt, Bytes, json, TypedMap } from "@graphprotocol/graph-ts";
+import { OrgMetadataTemplate } from "./../generated/templates";
 import {
   AdminChanged,
   BeaconUpgraded,
@@ -13,7 +13,7 @@ import { ipfs } from "@graphprotocol/graph-ts";
 import { JSONValue, Value } from "@graphprotocol/graph-ts";
 import { log } from "@graphprotocol/graph-ts";
 import { EventBadge } from "../generated/templates";
-import { getJSONFromIPFS } from "./helper/utils";
+import { getIPFSHashFromURL } from "./helper/utils";
 
 const SKILL_CID = "bafybeihjt3rgkglzenvytr3m3wyw5db35frysvldobi6t7b5i7ja4qed6u";
 // const SKILL_CID = "bafybeiatfzqendwjo6qrwbx7tosavgmaa34gn5s463wcm3rhf7a3bo3ai4";
@@ -95,44 +95,12 @@ export function handleCreateOrganisation(event: createOrgProfileEvent): void {
   org.name = event.params.orgInfo.name;
   org.description = event.params.orgInfo.description;
   org.metadataURI = event.params.orgInfo.metadataURI;
-  org.websiteURL = "/";
-  org.twitterId = "/";
-  org.discordServer = "/";
-  org.contactEmail = "/";
-  org.industry = "/";
+  org.metadata = getIPFSHashFromURL(event.params.orgInfo.metadataURI);
 
-  const ipfs_data = getJSONFromIPFS(event.params.orgInfo.metadataURI);
-  if (ipfs_data) {
-    let imageURL = ipfs_data.get("imageURL");
-    if (imageURL) {
-      org.image = imageURL.toString();
-    }
+  OrgMetadataTemplate.create(
+    getIPFSHashFromURL(event.params.orgInfo.metadataURI)
+  );
 
-    let websiteURL = ipfs_data.get("websiteURL");
-    if (websiteURL) {
-      org.websiteURL = websiteURL.toString();
-    }
-
-    let twitterId = ipfs_data.get("twitterId");
-    if (twitterId) {
-      org.twitterId = twitterId.toString();
-    }
-
-    let discordServer = ipfs_data.get("discordServer");
-    if (discordServer) {
-      org.discordServer = discordServer.toString();
-    }
-
-    let contactEmail = ipfs_data.get("contactEmail");
-    if (contactEmail) {
-      org.contactEmail = contactEmail.toString();
-    }
-
-    let industry = ipfs_data.get("industry");
-    if (industry) {
-      org.industry = industry.toString();
-    }
-  }
   org.save();
 }
 
@@ -147,39 +115,11 @@ export function handleUpdateOrganisation(event: updateOrgProfileEvent): void {
     org.name = event.params.orgInfo.name;
     org.description = event.params.orgInfo.description;
     org.metadataURI = event.params.orgInfo.metadataURI;
+    org.metadata = getIPFSHashFromURL(event.params.orgInfo.metadataURI);
 
-    const ipfs_data = getJSONFromIPFS(event.params.orgInfo.metadataURI);
-    if (ipfs_data) {
-      let imageURL = ipfs_data.get("imageURL");
-      if (imageURL) {
-        org.image = imageURL.toString();
-      }
-
-      let websiteURL = ipfs_data.get("websiteURL");
-      if (websiteURL) {
-        org.websiteURL = websiteURL.toString();
-      }
-
-      let twitterId = ipfs_data.get("twitterId");
-      if (twitterId) {
-        org.twitterId = twitterId.toString();
-      }
-
-      let discordServer = ipfs_data.get("discordServer");
-      if (discordServer) {
-        org.discordServer = discordServer.toString();
-      }
-
-      let contactEmail = ipfs_data.get("contactEmail");
-      if (contactEmail) {
-        org.contactEmail = contactEmail.toString();
-      }
-
-      let industry = ipfs_data.get("industry");
-      if (industry) {
-        org.industry = industry.toString();
-      }
-    }
+    OrgMetadataTemplate.create(
+      getIPFSHashFromURL(event.params.orgInfo.metadataURI)
+    );
 
     org.save();
   }

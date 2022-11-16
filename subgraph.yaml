@@ -11,7 +11,7 @@ dataSources:
       startBlock: 28953935
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - ContractAdmin
@@ -45,7 +45,7 @@ templates:
       abi: EventBadge
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - EventBadge
@@ -62,4 +62,30 @@ templates:
         - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
           handler: handleMint
       file: ./src/eventBadge.ts
+  - name: OrgMetadataTemplate
+    kind: file/ipfs
+    mapping:
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/metadata.ts
+      handler: handleOrgMetadata
+      entities:
+        - OrgMetadata
+      abis:
+        - name: EventBadge
+          file: ./abis/EventBadge.json
+    network: mumbai
+  - name: EventBadgeMetadataTemplate
+    kind: file/ipfs
+    mapping:
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/metadata.ts
+      handler: handleEventBadgeMetadata
+      entities:
+        - EventBadgeMetadata
+      abis:
+        - name: EventBadge
+          file: ./abis/EventBadge.json
+    network: mumbai
 features: ["ipfsOnEthereumContracts"]

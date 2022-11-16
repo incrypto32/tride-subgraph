@@ -27,15 +27,8 @@ export function getOrCreateArray(
   }
 }
 
-export function getJSONFromIPFS(
-  url: string
-): TypedMap<string, JSONValue> | null {
-  const hash = url.replace("ipfs://", "");
-  const BytesData = ipfs.cat(hash);
-  if (BytesData) {
-    return json.fromBytes(BytesData).toObject();
-  }
-  return null;
+export function getIPFSHashFromURL(url: string): string {
+  return url.replace("ipfs://", "");
 }
 
 export function getValueFromJSON(

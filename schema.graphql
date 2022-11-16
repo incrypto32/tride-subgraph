@@ -10,13 +10,18 @@ type Organisation @entity {
   name: String
   description: String
   metadataURI: String
+  metadata: OrgMetadata
+  events: [Event!]! @derivedFrom(field: "organisation")
+}
+
+type OrgMetadata @entity {
+  id: ID!
   image: String
   websiteURL: String
   twitterId: String
   discordServer: String
   contactEmail: String
   industry: String
-  events: [Event!]! @derivedFrom(field: "organisation")
 }
 
 type Skill @entity {
@@ -31,7 +36,7 @@ type Skill @entity {
 # General Type
 type User @entity {
   id: ID!
-  badge: [Badge!] 
+  badge: [Badge!]
 }
 
 # Badges Related
@@ -40,8 +45,6 @@ interface Badge {
   type: BadgesType!
   tokenId: BigInt!
   name: String
-  image: String
-  attributes: [String!]
   owner: [User!] @derivedFrom(field: "badge")
 }
 
@@ -67,8 +70,7 @@ type EventBadge implements Badge @entity {
   tokenId: BigInt!
   name: String
   description: String
-  image: String
-  attributes: [String!]
+  metadata: EventBadgeMetadata
   start_time: BigInt
   end_time: BigInt
   role: String
@@ -76,4 +78,10 @@ type EventBadge implements Badge @entity {
   quota: BigInt
   owner: [User!] @derivedFrom(field: "badge")
   event: Event!
+}
+
+type EventBadgeMetadata @entity {
+  id: ID!
+  image: String
+  attributes: [String!]
 }
