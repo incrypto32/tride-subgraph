@@ -26,8 +26,6 @@ dataSources:
       eventHandlers:
         - event: createOrgProfileEvent(uint256,(string,string,string,address[]))
           handler: handleCreateOrganisation
-        - event: Initialized(uint8)
-          handler: handleInitContract
         - event: BeaconUpgraded(indexed address)
           handler: handleBeaconUpgraded
         - event: Upgraded(indexed address)
