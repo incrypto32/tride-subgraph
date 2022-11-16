@@ -1,4 +1,4 @@
-import { ipfs, JSONValue, log } from "@graphprotocol/graph-ts";
+import { log } from "@graphprotocol/graph-ts";
 import { Event, EventBadge } from "../generated/schema";
 import { EventBadgeMetadataTemplate } from "../generated/templates";
 import {

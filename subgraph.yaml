@@ -88,4 +88,3 @@ templates:
         - name: EventBadge
           file: ./abis/EventBadge.json
     network: mumbai
-features: ["ipfsOnEthereumContracts"]

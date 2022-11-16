@@ -1,10 +1,4 @@
-import {
-  Address,
-  ipfs,
-  json,
-  JSONValue,
-  TypedMap,
-} from "@graphprotocol/graph-ts";
+import { Address, JSONValue, TypedMap } from "@graphprotocol/graph-ts";
 import { User } from "../../generated/schema";
 
 export function getOrCreateUser(user: Address): User {

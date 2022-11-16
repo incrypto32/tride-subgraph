@@ -9,7 +9,6 @@ import {
   Upgraded,
 } from "../generated/Organisation/Organisation";
 import { Skill, Organisation, Event } from "../generated/schema";
-import { ipfs } from "@graphprotocol/graph-ts";
 import { JSONValue, Value } from "@graphprotocol/graph-ts";
 import { log } from "@graphprotocol/graph-ts";
 import { EventBadge } from "../generated/templates";
@@ -78,16 +77,6 @@ export function processItem(value: JSONValue, userData: Value): void {
   }
 
   newItem.save();
-}
-
-export function createIPFS(hash: string): void {
-  log.warning("createIPFS hash- {}", [hash]);
-  ipfs.mapJSON(hash, "processItem", Value.fromString("Skills"));
-}
-
-export function handleInitContract(event: Initialized): void {
-  log.info("skill Record", []);
-  createIPFS(MALFORM_FULL_SET);
 }
 
 export function handleCreateOrganisation(event: createOrgProfileEvent): void {
